@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Đăng Nhập - Mắt Kính Hỗ Trợ Giao Tiếp{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="text-center mb-4">
+            <i class="fas fa-glasses fa-4x mb-3" style="color: #4a90e2;"></i>
+            <h2 style="color: #2c3e50; font-weight: 700;">Mắt Kính Hỗ Trợ Giao Tiếp</h2>
+            <p class="text-muted">Nghiên cứu khoa học sinh viên 2025</p>
+        </div>
+        
+        <div class="card shadow-lg" style="border: none; border-radius: 20px;">
+            <div class="card-body p-5">
+                <h3 class="card-title text-center mb-4" style="color: #2c3e50; font-weight: 600;">
+                    <i class="fas fa-sign-in-alt"></i> Đăng Nhập Hệ Thống
+                </h3>
+                
+                <form method="POST">
+                    <div class="mb-4">
+                        <label for="phone_number" class="form-label" style="font-weight: 500;">
+                            <i class="fas fa-phone"></i> Số Điện Thoại
+                        </label>
+                        <input type="tel" class="form-control" id="phone_number" name="phone_number" required
+                               style="border-radius: 12px; padding: 15px; border: 2px solid #e9ecef;"
+                               placeholder="Nhập số điện thoại của bạn">
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="password" class="form-label" style="font-weight: 500;">
+                            <i class="fas fa-lock"></i> Mật Khẩu
+                        </label>
+                        <input type="password" class="form-control" id="password" name="password" required
+                               style="border-radius: 12px; padding: 15px; border: 2px solid #e9ecef;"
+                               placeholder="Nhập mật khẩu của bạn">
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary w-100 py-3" 
+                            style="border-radius: 12px; font-weight: 600; font-size: 1.1rem;">
+                        <i class="fas fa-sign-in-alt"></i> Đăng Nhập Vào Hệ Thống
+                    </button>
+                </form>
+                
+                <div class="text-center mt-4">
+                    <p style="color: #6c757d;">Chưa có tài khoản? 
+                        <a href="{{ url_for('register') }}" style="color: #4a90e2; font-weight: 600; text-decoration: none;">
+                            Đăng ký ngay
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

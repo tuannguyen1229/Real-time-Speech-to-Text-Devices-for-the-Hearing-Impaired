@@ -1,0 +1,305 @@
+{% extends "base.html" %}
+
+{% block title %}Bảng Điều Khiển - Mắt Kính Hỗ Trợ Giao Tiếp{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <h1><i class="fas fa-glasses"></i> Mắt Kính Hỗ Trợ Giao Tiếp</h1>
+    <p>NGHIÊN CỨU KHOA HỌC 2025 - Thiết bị hỗ trợ người khiếm thính giao tiếp dễ dàng hơn</p>
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-headset"></i> Quản Lý Thiết Bị</h2>
+    <div>
+        <a href="{{ url_for('wifi_manager') }}" class="btn btn-primary btn-lg me-2">
+            <i class="fas fa-wifi"></i> WiFi Manager
+        </a>
+        <a href="{{ url_for('add_device') }}" class="btn btn-success btn-lg">
+            <i class="fas fa-plus"></i> Thêm Mắt Kính Mới
+        </a>
+    </div>
+</div>
+
+{% if devices %}
+<div class="row">
+    {% for device in devices %}
+    <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card device-card h-100">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-glasses"></i> {{ device.device_name }}
+                </h5>
+
+                <p class="card-text">
+                    <strong>Mã thiết bị:</strong> {{ device.device_id }}<br>
+                    <strong>Trạng thái:</strong>
+                    <span id="status-{{ device.id }}" class="status-indicator">
+                        <i class="fas fa-circle"></i> Đang kiểm tra...
+                    </span><br>
+
+                    <strong>Địa chỉ IP:</strong> 
+                    {% if device.esp32_ip %}
+                    <span class="badge bg-info">{{ device.esp32_ip }}</span>
+                    {% else %}
+                    <span class="badge bg-secondary">Chưa có</span>
+                    {% endif %}<br>
+
+                    {% if device.wifi_name %}
+                    <strong>Mạng WiFi:</strong> {{ device.wifi_name }}<br>
+                    {% endif %}
+
+
+
+                    {% if device.last_seen %}
+                    <strong>Hoạt động cuối:</strong> {{ device.last_seen.strftime('%d/%m/%Y %H:%M') }}
+                    {% endif %}
+                </p>
+
+                <!-- Text realtime display -->
+                <div class="mt-3">
+                    <h6 class="text-muted mb-2">
+                        <i class="fas fa-comment-dots"></i> Văn bản nhận diện gần nhất:
+                    </h6>
+                    <div id="text-{{ device.id }}" class="text-display p-3 rounded" 
+                         style="max-height: 120px; overflow-y: auto; font-size: 0.9em; line-height: 1.4;">
+                        <em class="text-muted">Đang tải...</em>
+                    </div>
+                </div>
+
+                <div class="btn-group w-100 mb-2 mt-3" role="group">
+                    <a href="{{ url_for('device_detail', device_id=device.id) }}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-chart-line"></i> Xem Chi Tiết
+                    </a>
+                    <button class="btn btn-warning btn-sm wifi-btn" data-device-id="{{ device.id }}"
+                        data-wifi-name="{{ device.wifi_name or '' }}">
+                        <i class="fas fa-wifi"></i> Cấu Hình WiFi
+                    </button>
+                </div>
+                
+                <div class="d-grid">
+                    <button class="btn btn-danger btn-sm delete-btn" 
+                            data-device-id="{{ device.id }}" 
+                            data-device-name="{{ device.device_name }}">
+                        <i class="fas fa-trash"></i> Xóa Mắt Kính
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="text-center py-5">
+    <i class="fas fa-glasses fa-4x text-muted mb-4"></i>
+    <h4>Chưa có mắt kính nào được kết nối</h4>
+    <p class="text-muted">Hãy thêm mắt kính hỗ trợ giao tiếp đầu tiên của bạn</p>
+    <a href="{{ url_for('add_device') }}" class="btn btn-success btn-lg">
+        <i class="fas fa-plus"></i> Thêm Mắt Kính Mới
+    </a>
+</div>
+{% endif %}
+
+<!-- Modal cập nhật WiFi -->
+<div class="modal fade" id="wifiModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content" style="border-radius: 15px; border: none;">
+            <div class="modal-header" style="background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%); color: white; border-radius: 15px 15px 0 0;">
+                <h5 class="modal-title"><i class="fas fa-wifi"></i> Cấu Hình Kết Nối WiFi</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="wifiForm">
+                <div class="modal-body" style="padding: 2rem;">
+                    <input type="hidden" id="deviceId" name="device_id">
+                    
+                    <div class="mb-4">
+                        <label for="wifiName" class="form-label"><i class="fas fa-network-wired"></i> Tên Mạng WiFi</label>
+                        <input type="text" class="form-control" id="wifiName" name="wifi_name" required 
+                               style="border-radius: 10px; padding: 12px;" placeholder="Nhập tên WiFi">
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="wifiPassword" class="form-label"><i class="fas fa-lock"></i> Mật Khẩu WiFi</label>
+                        <input type="password" class="form-control" id="wifiPassword" name="wifi_password" required 
+                               style="border-radius: 10px; padding: 12px;" placeholder="Nhập mật khẩu WiFi">
+                    </div>
+                    
+                    <div class="alert alert-info" style="border-radius: 10px;">
+                        <i class="fas fa-info-circle"></i> Mắt kính sẽ tự động kết nối với mạng WiFi mới trong vòng 30 giây.
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding: 1.5rem 2rem;">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="border-radius: 8px;">Hủy Bỏ</button>
+                    <button type="submit" class="btn btn-primary" style="border-radius: 8px;"><i class="fas fa-save"></i> Cập Nhật WiFi</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function showWifiModal(deviceId, currentWifiName) {
+        document.getElementById('deviceId').value = deviceId;
+        document.getElementById('wifiName').value = currentWifiName;
+        document.getElementById('wifiPassword').value = '';
+
+        var modal = new bootstrap.Modal(document.getElementById('wifiModal'));
+        modal.show();
+    }
+
+    function updateDeviceStatus(deviceId) {
+        fetch(`/api/device/status/${deviceId}`)
+            .then(response => response.json())
+            .then(data => {
+                const statusElement = document.getElementById(`status-${deviceId}`);
+                if (data.success) {
+                    const device = data.device;
+                    const isOnline = device.status === 'online';
+                    const statusClass = isOnline ? 'text-success' : 'text-danger';
+                    const statusText = isOnline ? 'Trực tuyến' : 'Ngoại tuyến';
+                    const statusIcon = 'fas fa-circle';
+
+                    statusElement.innerHTML = `<i class="${statusIcon} ${statusClass}"></i> ${statusText}`;
+                    statusElement.className = `status-indicator ${statusClass}`;
+
+                    if (device.last_seen) {
+                        const lastSeen = new Date(device.last_seen).toLocaleString('vi-VN');
+                        statusElement.title = `Lần cuối: ${lastSeen}`;
+                    }
+                } else {
+                    statusElement.innerHTML = '<i class="fas fa-exclamation-triangle text-warning"></i> Lỗi';
+                }
+            })
+            .catch(error => {
+                console.error('Error checking device status:', error);
+                const statusElement = document.getElementById(`status-${deviceId}`);
+                statusElement.innerHTML = '<i class="fas fa-question-circle text-muted"></i> Không rõ';
+            });
+    }
+
+    function updateDeviceTextHistory(deviceId) {
+        fetch(`/device/${deviceId}/text-history`)
+            .then(response => response.json())
+            .then(data => {
+                const textElement = document.getElementById(`text-${deviceId}`);
+                
+                if (data.success && data.text_history && data.text_history.length > 0) {
+                    // Hiển thị 5 văn bản gần nhất
+                    const recentTexts = data.text_history.slice(0, 5);
+                    const textHtml = recentTexts.map(item => {
+                        const time = new Date(item.recorded_at).toLocaleTimeString('vi-VN', {
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        });
+                        return `<div class="mb-2 p-2" style="background: rgba(74, 144, 226, 0.1); border-radius: 8px;">
+                            <small class="text-muted"><i class="fas fa-clock"></i> ${time}</small>
+                            <div style="margin-top: 4px; font-weight: 500;">${item.transcript_text}</div>
+                        </div>`;
+                    }).join('');
+
+                    textElement.innerHTML = textHtml;
+                } else {
+                    textElement.innerHTML = '<em class="text-muted"><i class="fas fa-info-circle"></i> Chưa có văn bản nhận diện nào</em>';
+                }
+            })
+            .catch(error => {
+                console.error('Error loading text history:', error);
+                const textElement = document.getElementById(`text-${deviceId}`);
+                textElement.innerHTML = '<em class="text-muted">Lỗi tải text</em>';
+            });
+    }
+
+    function deleteDevice(deviceId) {
+        fetch(`/delete_device/${deviceId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                location.reload();
+            } else {
+                alert('Lỗi: ' + data.message);
+            }
+        })
+        .catch(error => {
+            alert('Lỗi kết nối: ' + error);
+        });
+    }
+
+    // Event listeners
+    document.addEventListener('DOMContentLoaded', function () {
+        // WiFi buttons
+        document.querySelectorAll('.wifi-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                const deviceId = this.getAttribute('data-device-id');
+                const wifiName = this.getAttribute('data-wifi-name');
+                showWifiModal(deviceId, wifiName);
+            });
+        });
+        
+        // Delete buttons
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                const deviceId = this.getAttribute('data-device-id');
+                const deviceName = this.getAttribute('data-device-name');
+                
+                if (confirm(`Bạn có chắc chắn muốn xóa thiết bị "${deviceName}"?\n\nThao tác này sẽ xóa vĩnh viễn thiết bị và tất cả dữ liệu liên quan.`)) {
+                    deleteDevice(deviceId);
+                }
+            });
+        });
+
+        // Cập nhật trạng thái và text ban đầu
+        const deviceElements = document.querySelectorAll('[id^="status-"]');
+        const deviceIds = Array.from(deviceElements).map(el => el.id.replace('status-', ''));
+
+        deviceIds.forEach(deviceId => {
+            updateDeviceStatus(deviceId);
+            updateDeviceTextHistory(deviceId);
+        });
+
+        // Cập nhật trạng thái mỗi 10 giây
+        setInterval(function () {
+            deviceIds.forEach(deviceId => {
+                updateDeviceStatus(deviceId);
+            });
+        }, 10000);
+
+        // Cập nhật text history mỗi 5 giây
+        setInterval(function () {
+            deviceIds.forEach(deviceId => {
+                updateDeviceTextHistory(deviceId);
+            });
+        }, 5000);
+    });
+
+    document.getElementById('wifiForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const deviceId = document.getElementById('deviceId').value;
+        const formData = new FormData(this);
+
+        fetch(`/update_wifi/${deviceId}`, {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('✅ Cập nhật cấu hình WiFi thành công! Mắt kính sẽ kết nối với mạng mới trong vài giây.');
+                    location.reload();
+                } else {
+                    alert('❌ Lỗi cập nhật WiFi: ' + data.message);
+                }
+            })
+            .catch(error => {
+                alert('Lỗi kết nối: ' + error);
+            });
+    });
+</script>
+{% endblock %}
