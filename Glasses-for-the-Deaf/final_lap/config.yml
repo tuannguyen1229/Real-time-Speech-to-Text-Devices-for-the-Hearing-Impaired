@@ -1,0 +1,7 @@
+tunnel: 9df1dbe7-4303-4a26-b5cc-ae0c22737887
+credentials-file: C:\Users\Thanh Tùng\.cloudflared\9df1dbe7-4303-4a26-b5cc-ae0c22737887.json
+
+ingress:
+  - hostname: esp32.ptitavitech.online
+    service: http://localhost:8765
+  - service: http_status:404
