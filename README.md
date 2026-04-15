@@ -76,47 +76,47 @@ Dự án này xây dựng một hệ thống hoàn chỉnh bao gồm:
 
 ## Kiến trúc hệ thống
 
-```
-graph LR
-    subgraph GLASSES ["👓 Smart Glasses (ESP32)"]
-        MIC[I2S Microphone<br/>INMP441]
-        ESP[ESP32<br/>Audio Capture]
+```mermaid
+graph TB
+    subgraph ESP32["Kính thông minh (ESP32)"]
+        MIC["🎤<br/>Microphone<br/>I2S INMP441"]
+        AUDIO["I2S 16kHz<br/>16-bit PCM"]
+        CHIP["📱<br/>ESP32<br/>Audio Capture"]
+        MIC --> AUDIO --> CHIP
     end
 
-    subgraph SERVER ["🖥️ Backend Server"]
-        WS_SERVER[Audio Server<br/>Python WebSocket<br/>Port 8765]
-        SPEECH_API[Speechmatics API<br/>Vietnamese STT<br/>Enhanced Mode]
-        FLASK[Flask Web Portal<br/>Port 5000]
-        DB[(PostgreSQL<br/>Transcripts + Devices)]
+    subgraph Backend["Server Backend"]
+        WS["Server Backend<br/>WebSocket<br/>768-byte chunks"]
+        API["API<br/>Speechmatics<br/>Vietnamese STT<br/>Enhanced Mode"]
+        FLASK["Flask Web Portal<br/>Port 5000"]
+        DB[("🐘<br/>PostgreSQL<br/>(Bản dịch + Thiết bị)")]
+        
+        WS -->|Audio Stream| API
+        API -->|Transcript JSON| WS
+        WS <-->|Kết nối DB| DB
+        FLASK <-->|Lưu dữ liệu| DB
     end
 
-    subgraph TUNNEL ["🔒 Secure Access"]
-        CF[Cloudflare Tunnel<br/>Public HTTPS]
+    subgraph Security["Truy cập bảo mật"]
+        CF["🔒<br/>Cloudflare Tunnel<br/>Public HTTPS"]
     end
 
-    subgraph CLIENT ["👥 End Users"]
-        PORTAL[🌐 Web Portal<br/>Device Management]
-        TRANSCRIPT[📝 Live Transcript<br/>Partial + Final]
-        HISTORY[📋 Transcript History<br/>24h]
+    subgraph Users["Người dùng cuối"]
+        PORTAL["🌐<br/>Web Portal<br/>Quản lý thiết bị"]
+        LIVE["📱<br/>Live Transcript<br/>Partial + Final"]
+        HISTORY["🕐<br/>Lịch sử bản dịch<br/>24h"]
     end
 
-    MIC -->|I2S 16kHz<br/>16-bit PCM| ESP
-    ESP -->|WebSocket<br/>768-byte chunks| WS_SERVER
-    WS_SERVER -->|Audio Stream| SPEECH_API
-    SPEECH_API -->|Transcript JSON| WS_SERVER
-    WS_SERVER --> DB
-    WS_SERVER --> FLASK
-    FLASK --> PORTAL
-    FLASK --> TRANSCRIPT
-    FLASK --> HISTORY
-    FLASK <--> DB
-    CF --> FLASK
+    CHIP -->|Luồng âm thanh<br/>WebSocket| WS
+    CF -->|Cloudflare| Backend
+    FLASK -->|Transcript JSON| PORTAL
+    WS -->|Transcript JSON| LIVE
+    DB -->|Bản dịch| HISTORY
 
-    style GLASSES fill:#4CAF50,color:#fff
-    style SERVER fill:#2196F3,color:#fff
-    style TUNNEL fill:#FF9800,color:#fff
-    style CLIENT fill:#9C27B0,color:#fff
-
+    style ESP32 fill:#2d5016,stroke:#333,stroke-width:3px,color:#fff
+    style Backend fill:#1e4d7b,stroke:#333,stroke-width:3px,color:#fff
+    style Security fill:#8b4513,stroke:#333,stroke-width:3px,color:#fff
+    style Users fill:#6b2d5c,stroke:#333,stroke-width:3px,color:#fff
 ```
 
 ## Công nghệ sử dụng
@@ -279,23 +279,8 @@ ESP32 cần được lập trình để:
 - `POST /api/text/save` - Lưu transcript
 - `GET /device/<device_id>/text-history` - Lấy lịch sử transcript
 
+## 👤 Author
 
+**Nguyen Nhu Tuan** - [@tuannguyen1229](https://github.com/tuannguyen1229)
 
-## Đóng góp
-
-Dự án nghiên cứu khoa học sinh viên 2025. Mọi đóng góp và góp ý xin gửi về repository.
-
-## Giấy phép
-
-Dự án này được phát triển cho mục đích nghiên cứu và giáo dục.
-
-## Liên hệ
-
-Để biết thêm thông tin, vui lòng liên hệ qua repository issues.
-
-## Ghi chú
-
-- Speechmatics API key trong code là key demo, cần thay thế bằng key của bạn
-- Cloudflare tunnel credentials là riêng tư, cần cấu hình lại cho deployment của bạn
-- Database password mặc định là "1234", nên thay đổi trong production
 
