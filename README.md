@@ -57,7 +57,7 @@ Dự án này xây dựng một hệ thống hoàn chỉnh bao gồm:
 ### 2. Quản lý thiết bị
 - Đăng ký và quản lý nhiều thiết bị ESP32
 - Theo dõi trạng thái online/offline realtime
-- Hiển thị thông tin kết nối (IP, MAC address, RSSI)
+- Hiển thị thông tin kết nối (IP, MAC address)
 
 ### 3. Cấu hình WiFi từ xa
 - Cập nhật cấu hình WiFi cho ESP32 qua web portal
@@ -68,11 +68,6 @@ Dự án này xây dựng một hệ thống hoàn chỉnh bao gồm:
 - Lưu trữ toàn bộ transcript vào PostgreSQL database
 - Xem lịch sử 24 giờ gần nhất
 - Phân biệt partial và final transcript
-
-### 5. Bảo mật
-- Xác thực người dùng với bcrypt password hashing
-- Mỗi thiết bị chỉ được truy cập bởi chủ sở hữu
-- Session management an toàn
 
 ## Kiến trúc hệ thống
 
