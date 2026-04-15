@@ -5,9 +5,11 @@
   <img src="https://img.shields.io/badge/Flask-Web%20Server-black"/>
   <img src="https://img.shields.io/badge/WebSocket-Real--time-orange"/>
 </p>
-Hệ thống nhận dạng giọng nói realtime cho thiết bị ESP32, hỗ trợ người khiếm thính giao tiếp hiệu quả hơn thông qua mắt kính thông minh.
+Hệ thống nhận dạng giọng nói tiếng Việt real-time dành cho người khiếm thính — ESP32 thu âm & stream audio qua WebSocket, server Python xử lý với Speechmatics API, hiển thị transcript trên Web Portal.
 
-## Tổng quan
+Real-time Vietnamese speech recognition system for the hearing impaired — ESP32 captures & streams audio via WebSocket, Python server processes with Speechmatics API, displaying transcripts on a Web Portal.
+
+Tổng quan
 
 Dự án này xây dựng một hệ thống hoàn chỉnh bao gồm:
 
@@ -15,6 +17,38 @@ Dự án này xây dựng một hệ thống hoàn chỉnh bao gồm:
 - Server Python xử lý audio với Speechmatics API (nhận dạng tiếng Việt)
 - Web Portal quản lý thiết bị, cấu hình WiFi và lịch sử transcript
 - Cloudflare Tunnel để truy cập từ xa an toàn
+
+<h2> Demo</h2>
+<table>
+  <tr>
+    <th>Hardware Overview</th>
+    <th>OLED Display</th>
+    <th>Close-up Display</th>
+    <th>Wearing Demo</th>
+  </tr>
+  
+  <tr>
+    <td align="center">
+      <img src="https://github.com/tuannguyen1229/Real-time-Speech-to-Text-Devices-for-the-Hearing-Impaired/blob/main/docs/smart_glasses_overview.jpg" width="200"/><br/>
+      <em>Mắt kính thông minh với ESP32, I2S Microphone và OLED</em>
+    </td>
+
+    <td align="center">
+      <img src="https://github.com/tuannguyen1229/Real-time-Speech-to-Text-Devices-for-the-Hearing-Impaired/blob/main/docs/oled_display_inverted.jpg" width="200"/><br/>
+      <em>Màn hình OLED hiển thị transcript "Xin chào các bạn!"</em>
+    </td>
+
+    <td align="center">
+      <img src="link_anh_3.jpg" width="200"/><br/>
+      <em>Cận cảnh OLED 0.96" SSD1306 và I2S Microphone</em>
+    </td>
+
+    <td align="center">
+      <img src="link_anh_4.jpg" width="200"/><br/>
+      <em>Demo đeo thực tế — gọn nhẹ, tích hợp đầy đủ</em>
+    </td>
+  </tr>
+</table>
 
 ## Tính năng chính
 
