@@ -18,7 +18,7 @@ Dự án này xây dựng một hệ thống hoàn chỉnh bao gồm:
 - Web Portal quản lý thiết bị, cấu hình WiFi và lịch sử transcript
 - Cloudflare Tunnel để truy cập từ xa an toàn
 
-<h2>📸 Demo</h2>
+## Demo
 
 <table>
   <tr>
@@ -27,23 +27,19 @@ Dự án này xây dựng một hệ thống hoàn chỉnh bao gồm:
     <th>Close-up Display</th>
     <th>Wearing Demo</th>
   </tr>
-
   <tr>
     <td align="center">
       <img src="https://github.com/tuannguyen1229/Real-time-Speech-to-Text-Devices-for-the-Hearing-Impaired/blob/main/docs/smart_glasses_overview.jpg" width="200"/><br/>
       <em>Mắt kính thông minh với ESP32, I2S Microphone và OLED</em>
     </td>
-
     <td align="center">
       <img src="https://github.com/tuannguyen1229/Real-time-Speech-to-Text-Devices-for-the-Hearing-Impaired/blob/main/docs/oled_display_inverted.jpg" width="200"/><br/>
       <em>Màn hình OLED hiển thị transcript "Xin chào các bạn!"</em>
     </td>
-
     <td align="center">
       <img src="https://github.com/tuannguyen1229/Real-time-Speech-to-Text-Devices-for-the-Hearing-Impaired/blob/main/docs/oled_display_closeup.jpg" width="200"/><br/>
       <em>Cận cảnh OLED 0.96" SSD1306 và I2S Microphone</em>
     </td>
-
     <td align="center">
       <img src="https://github.com/tuannguyen1229/Real-time-Speech-to-Text-Devices-for-the-Hearing-Impaired/blob/main/docs/wearing_demo.jpg" width="200"/><br/>
       <em>Demo đeo thực tế — gọn nhẹ, tích hợp đầy đủ</em>
