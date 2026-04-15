@@ -30,11 +30,11 @@ Dự án này xây dựng một hệ thống hoàn chỉnh bao gồm:
   <tr>
     <td align="center">
       <img src="https://github.com/tuannguyen1229/Real-time-Speech-to-Text-Devices-for-the-Hearing-Impaired/blob/main/docs/smart_glasses_overview.jpg" width="200"/><br/>
-      <em>Mắt kính thông minh với ESP32, I2S Microphone và OLED</em>
+      <em>Thiết kế tổng thể mắt kính thông minh với ESP32, I2S Microphone và OLED</em>
     </td>
     <td align="center">
       <img src="https://github.com/tuannguyen1229/Real-time-Speech-to-Text-Devices-for-the-Hearing-Impaired/blob/main/docs/oled_display_inverted.jpg" width="200"/><br/>
-      <em>Màn hình OLED hiển thị transcript "Xin chào các bạn!"</em>
+      <em>Màn hình OLED hiển thị "Xin chào các bạn!" thời gian thực</em>
     </td>
     <td align="center">
       <img src="https://github.com/tuannguyen1229/Real-time-Speech-to-Text-Devices-for-the-Hearing-Impaired/blob/main/docs/oled_display_closeup.jpg" width="200"/><br/>
@@ -42,7 +42,7 @@ Dự án này xây dựng một hệ thống hoàn chỉnh bao gồm:
     </td>
     <td align="center">
       <img src="https://github.com/tuannguyen1229/Real-time-Speech-to-Text-Devices-for-the-Hearing-Impaired/blob/main/docs/wearing_demo.jpg" width="200"/><br/>
-      <em>Demo đeo thực tế — gọn nhẹ, tích hợp đầy đủ</em>
+      <em>Demo người dùng đeo và sử dụng thiết bị</em>
     </td>
   </tr>
 </table>
