@@ -1,5 +1,10 @@
 # Mắt Kính Hỗ Trợ Giao Tiếp - ESP32 Realtime Speech Recognition
-
+<p align="center">
+  <img src="https://img.shields.io/badge/ESP32-Firmware-blue"/>
+  <img src="https://img.shields.io/badge/Python-3.8+-yellow"/>
+  <img src="https://img.shields.io/badge/Flask-Web%20Server-black"/>
+  <img src="https://img.shields.io/badge/WebSocket-Real--time-orange"/>
+</p>
 Hệ thống nhận dạng giọng nói realtime cho thiết bị ESP32, hỗ trợ người khiếm thính giao tiếp hiệu quả hơn thông qua mắt kính thông minh.
 
 ## Tổng quan
