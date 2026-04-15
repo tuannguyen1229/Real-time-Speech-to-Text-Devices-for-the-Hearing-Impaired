@@ -77,22 +77,46 @@ Dự án này xây dựng một hệ thống hoàn chỉnh bao gồm:
 ## Kiến trúc hệ thống
 
 ```
-ESP32 Device
-    |
-    | WebSocket (audio stream)
-    v
-ESP32 Audio Server (Python)
-    |
-    | Speechmatics API
-    v
-Transcript Results
-    |
-    | REST API
-    v
-Web Portal (Flask)
-    |
-    v
-PostgreSQL Database
+graph LR
+    subgraph GLASSES ["👓 Smart Glasses (ESP32)"]
+        MIC[I2S Microphone<br/>INMP441]
+        ESP[ESP32<br/>Audio Capture]
+    end
+
+    subgraph SERVER ["🖥️ Backend Server"]
+        WS_SERVER[Audio Server<br/>Python WebSocket<br/>Port 8765]
+        SPEECH_API[Speechmatics API<br/>Vietnamese STT<br/>Enhanced Mode]
+        FLASK[Flask Web Portal<br/>Port 5000]
+        DB[(PostgreSQL<br/>Transcripts + Devices)]
+    end
+
+    subgraph TUNNEL ["🔒 Secure Access"]
+        CF[Cloudflare Tunnel<br/>Public HTTPS]
+    end
+
+    subgraph CLIENT ["👥 End Users"]
+        PORTAL[🌐 Web Portal<br/>Device Management]
+        TRANSCRIPT[📝 Live Transcript<br/>Partial + Final]
+        HISTORY[📋 Transcript History<br/>24h]
+    end
+
+    MIC -->|I2S 16kHz<br/>16-bit PCM| ESP
+    ESP -->|WebSocket<br/>768-byte chunks| WS_SERVER
+    WS_SERVER -->|Audio Stream| SPEECH_API
+    SPEECH_API -->|Transcript JSON| WS_SERVER
+    WS_SERVER --> DB
+    WS_SERVER --> FLASK
+    FLASK --> PORTAL
+    FLASK --> TRANSCRIPT
+    FLASK --> HISTORY
+    FLASK <--> DB
+    CF --> FLASK
+
+    style GLASSES fill:#4CAF50,color:#fff
+    style SERVER fill:#2196F3,color:#fff
+    style TUNNEL fill:#FF9800,color:#fff
+    style CLIENT fill:#9C27B0,color:#fff
+
 ```
 
 ## Công nghệ sử dụng
@@ -255,39 +279,7 @@ ESP32 cần được lập trình để:
 - `POST /api/text/save` - Lưu transcript
 - `GET /device/<device_id>/text-history` - Lấy lịch sử transcript
 
-## Tối ưu hóa
 
-### Audio Streaming
-- Sample rate: 16kHz (cân bằng chất lượng và băng thông)
-- Chunk size: 768 bytes (tối ưu cho WebSocket)
-- Encoding: PCM 16-bit signed little-endian
-
-### Speechmatics Configuration
-- Operating point: "enhanced" (độ chính xác cao)
-- Max delay: 0.7s (độ trễ thấp)
-- Enable partials: true (hiển thị realtime)
-
-### Heartbeat Optimization
-- Interval: 120 giây (giảm tải server)
-- Timeout: 60 giây (phát hiện offline nhanh)
-- Reduced logging (giảm noise trong console)
-
-## Xử lý lỗi
-
-### ESP32 không kết nối được
-- Kiểm tra WiFi credentials
-- Kiểm tra server đang chạy (port 8765)
-- Kiểm tra firewall
-
-### Không nhận dạng được giọng nói
-- Kiểm tra Speechmatics API key
-- Kiểm tra microphone I2S hoạt động
-- Kiểm tra sample rate và encoding
-
-### Database connection error
-- Kiểm tra PostgreSQL đang chạy
-- Kiểm tra credentials trong .env
-- Kiểm tra database đã được tạo
 
 ## Đóng góp
 
